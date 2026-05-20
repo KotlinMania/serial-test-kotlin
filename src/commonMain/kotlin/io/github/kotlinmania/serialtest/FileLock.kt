@@ -74,13 +74,7 @@ internal fun getLocks(names: List<String>, path: String?): List<Lock> {
     return names.map { name -> makeLockForNameAndPath(name, path) }
 }
 
-/**
- * Check if the current execution is holding a file serial lock.
- *
- * Can be used to assert that a piece of code can only be called from a test
- * marked file serial.
- */
-fun isLockedFileSerially(name: String? = null, path: String? = null): Boolean =
+internal fun isLockedFileSeriallyInternal(name: String? = null, path: String? = null): Boolean =
     if (path != null) {
         Lock.isLocked(path)
     } else {

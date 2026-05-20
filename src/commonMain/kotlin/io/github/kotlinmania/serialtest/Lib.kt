@@ -65,21 +65,27 @@ package io.github.kotlinmania.serialtest
  */
 
 // Tracking file for upstream `src/lib.rs`. Crate-root callable exports are ported as
-// their own Kotlin files rather than through a central re-export file:
-// `serial` -> Serial.kt, `parallel` -> Parallel.kt, `fileSerial` -> FileSerial.kt,
-// and `fileParallel` -> FileParallel.kt. Downstream Kotlin callers import those
-// defining functions directly.
+// their own Kotlin files rather than through a central re-export file. Downstream
+// Kotlin callers import the defining functions directly.
 
 // Upstream crate-root exports implemented in their defining Kotlin files:
-// `localAsyncParallelCore`, `localAsyncParallelCoreWithReturn` -> ParallelCodeLock.kt.
-// `localParallelCore`, `localParallelCoreWithReturn` -> ParallelCodeLock.kt.
-// `localAsyncSerialCore`, `localAsyncSerialCoreWithReturn` -> SerialCodeLock.kt.
-// `localSerialCore`, `localSerialCoreWithReturn` -> SerialCodeLock.kt.
-// `fsAsyncSerialCore`, `fsAsyncSerialCoreWithReturn` -> SerialFileLock.kt.
-// `fsSerialCore`, `fsSerialCoreWithReturn` -> SerialFileLock.kt.
-// `isLockedFileSerially` -> FileLock.kt.
-// `fsAsyncParallelCore`, `fsAsyncParallelCoreWithReturn` -> ParallelFileLock.kt.
-// `fsParallelCore`, `fsParallelCoreWithReturn` -> ParallelFileLock.kt.
+// `localAsyncParallelCore` -> LocalAsyncParallelCore.kt.
+// `localAsyncParallelCoreWithReturn` -> LocalAsyncParallelCoreWithReturn.kt.
+// `localParallelCore` -> LocalParallelCore.kt.
+// `localParallelCoreWithReturn` -> LocalParallelCoreWithReturn.kt.
+// `localAsyncSerialCore` -> LocalAsyncSerialCore.kt.
+// `localAsyncSerialCoreWithReturn` -> LocalAsyncSerialCoreWithReturn.kt.
+// `localSerialCore` -> LocalSerialCore.kt.
+// `localSerialCoreWithReturn` -> LocalSerialCoreWithReturn.kt.
+// `fsAsyncSerialCore` -> FsAsyncSerialCore.kt.
+// `fsAsyncSerialCoreWithReturn` -> FsAsyncSerialCoreWithReturn.kt.
+// `fsSerialCore` -> FsSerialCore.kt.
+// `fsSerialCoreWithReturn` -> FsSerialCoreWithReturn.kt.
+// `isLockedFileSerially` -> IsLockedFileSerially.kt.
+// `fsAsyncParallelCore` -> FsAsyncParallelCore.kt.
+// `fsAsyncParallelCoreWithReturn` -> FsAsyncParallelCoreWithReturn.kt.
+// `fsParallelCore` -> FsParallelCore.kt.
+// `fsParallelCoreWithReturn` -> FsParallelCoreWithReturn.kt.
 // `parallel` -> Parallel.kt.
 // `serial` -> Serial.kt.
 // `fileParallel` -> FileParallel.kt.

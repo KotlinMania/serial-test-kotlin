@@ -1,4 +1,5 @@
-// port-lint: source lib.rs
+// port-lint: ignore
+// Kotlin callable wrapper for the upstream crate-root file parallel attribute macro.
 package io.github.kotlinmania.serialtest
 
 /**

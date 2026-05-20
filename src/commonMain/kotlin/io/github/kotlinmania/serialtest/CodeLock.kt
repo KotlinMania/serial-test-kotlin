@@ -41,13 +41,7 @@ private object GlobalLocks {
 
 internal fun globalLocks(): MutableMap<String, UniqueReentrantMutex> = GlobalLocks.locks
 
-/**
- * Check if the current execution is holding a serial lock.
- *
- * Can be used to assert that a piece of code can only be called from a test
- * marked serial.
- */
-fun isLockedSerially(name: String? = null): Boolean {
+internal fun isLockedSeriallyInternal(name: String? = null): Boolean {
     GlobalLocks.mutex.lock()
     val lock = globalLocks()[name.orEmpty()]
     GlobalLocks.mutex.unlock()
