@@ -5,10 +5,10 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 8/8 (100.0%)
-- **Function parity:** 39/78 matched (target 51) — 50.0%
-- **Class/type parity:** 6/6 matched (target 10) — 100.0%
-- **Combined symbol parity:** 45/84 matched (target 61) — 53.6%
-- **Average inline-code cosine:** 0.37 (function body across 7 matched files)
+- **Function parity:** 43/78 matched (target 61) — 55.1%
+- **Class/type parity:** 6/6 matched (target 11) — 100.0%
+- **Combined symbol parity:** 49/84 matched (target 72) — 58.3%
+- **Average inline-code cosine:** 0.42 (function body across 7 matched files)
 - **Average documentation cosine:** 0.16 (doc text across 7 matched files)
 - **Cheat-zeroed Files:** 0
 - **Critical Issues:** 8 files with <0.60 function similarity
@@ -78,14 +78,14 @@ Every matched file is listed below with function and type symbol parity.
 ### 5. parallel_code_lock
 
 - **Target:** `serialtest.ParallelCodeLock`
-- **Similarity:** 0.26
+- **Similarity:** 0.59
 - **Dependents:** 0
-- **Priority Score:** 61107.4
-- **Functions:** 5/11 matched (target 5)
-- **Missing functions:** `unlock_on_assert_sync_without_return`, `unlock_on_assert_sync_with_return`, `unlock_on_assert_async_without_return`, `demo_assert`, `call_serial_test_fn`, `unlock_on_assert_async_with_return`
-- **Types:** 0/0 matched
+- **Priority Score:** 21104.1
+- **Functions:** 9/11 matched (target 15)
+- **Missing functions:** `demo_assert`, `call_serial_test_fn`
+- **Types:** 0/0 matched (target 1)
 - **Missing types:** _none_
-- **Tests:** 0/6 matched
+- **Tests:** 4/6 matched
 
 ### 6. serial_code_lock
 
