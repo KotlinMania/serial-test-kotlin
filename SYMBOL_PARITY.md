@@ -144,8 +144,12 @@ plus two stricter name-shape findings:
 - `Locks::new` in `rwlock.rs` is reported missing because the Kotlin port uses
   a constructor, not a named `new` function.
 - `Lock::unlock` in `file_lock.rs` is reported missing by file-by-file function
-  comparison; the broader symbol parity pass does not list it in the 5 missing
-  impl methods, so this needs explicit review before claiming method parity.
+  comparison; the broader symbol parity pass does not list it in the five
+  missing impl methods.
+
+Those two file-by-file comparer findings are advisory, not additional blockers.
+The port-lint headers and source-root symbol parity run are the authoritative
+route for locating the mapped Kotlin files and the remaining parity work.
 
 The remaining 37 unmatched functions are:
 
