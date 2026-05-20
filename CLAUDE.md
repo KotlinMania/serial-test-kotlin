@@ -89,6 +89,9 @@ For files that have no single Rust counterpart (re-homed from a `mod.rs`, or pur
 
 ## Build
 
+This repo is normalized on Kotlin `2.3.21`. Do not copy stale template notes or
+older compiler/runtime assumptions into this repo.
+
 ```bash
 ./gradlew build
 ./gradlew test
@@ -97,6 +100,43 @@ For files that have no single Rust counterpart (re-homed from a `mod.rs`, or pur
 Targets: macOS arm64/x64, Linux x64, mingw-x64, iOS arm64/x64/simulator-arm64, JS, Wasm-JS, Android.
 
 There is no JVM-only target. `./gradlew jvmTest` is **not** valid.
+
+## Local CodeQL reproduction
+
+Use the installed workspace CodeQL CLI. Do not download another CodeQL bundle.
+Java/Kotlin extraction must use the same Android-backed manual build shape as
+the workflow because KMP metadata-only compilation does not give the extractor
+useful JVM bytecode. `compileAndroidMain` runs the JVM Kotlin compiler path and
+produces bytecode that CodeQL can trace.
+
+```bash
+codeql database create db-codeql-java \
+  --language=java-kotlin \
+  --command='./gradlew setupAndroidSdk compileAndroidMain compileKotlinJs compileKotlinWasmJs --rerun-tasks --no-build-cache -Pkotlin.compiler.execution.strategy=out-of-process --no-configuration-cache --no-daemon'
+
+codeql database analyze db-codeql-java codeql/java-queries \
+  --format=sarif-latest \
+  --output=results-java.sarif
+```
+
+The manual Java/Kotlin command uses `--rerun-tasks`, `--no-build-cache`,
+out-of-process compiler execution, `--no-configuration-cache`, and
+`--no-daemon` to force fresh compiler invocations that CodeQL can observe.
+
+JavaScript analysis is buildless:
+
+```bash
+codeql database create db-codeql-js \
+  --language=javascript-typescript \
+  --build-mode=none
+
+codeql database analyze db-codeql-js codeql/javascript-queries \
+  --format=sarif-latest \
+  --output=results-js.sarif
+```
+
+If scanning GitHub Actions workflow files locally, use buildless actions
+extraction and analyze with the installed CodeQL actions queries.
 
 ## Forbidden
 
