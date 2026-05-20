@@ -119,6 +119,41 @@ Remaining private production method gaps:
 - `create_lockfile` from `file_lock.rs`
 - `write_parallel` from `file_lock.rs`
 
+## Function comparison cross-check
+
+The stricter file-by-file `--compare-functions` mode gives the same core
+missing-function set, but not the exact same list as `--symbol-parity`.
+
+Commands run:
+
+```bash
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/rwlock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/Rwlock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/CodeLock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/parallel_code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/ParallelCodeLock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/serial_code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/SerialCodeLock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/FileLock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/parallel_file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/ParallelFileLock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/serial_file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/SerialFileLock.kt kotlin
+/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/lib.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/Lib.kt kotlin
+```
+
+Strict function comparison reported 39 unmatched Rust functions across those
+pairs. That is the same 37 real missing items from the broader symbol pass
+plus two stricter name-shape findings:
+
+- `Locks::new` in `rwlock.rs` is reported missing because the Kotlin port uses
+  a constructor, not a named `new` function.
+- `Lock::unlock` in `file_lock.rs` is reported missing by file-by-file function
+  comparison; the broader symbol parity pass does not list it in the 5 missing
+  impl methods, so this needs explicit review before claiming method parity.
+
+The remaining 37 unmatched functions are:
+
+- `drop` from `rwlock.rs`
+- `gen_count_file`, `read_parallel_count`, `create_lockfile`, and
+  `write_parallel` from `file_lock.rs`
+- the 32 upstream inline test functions listed by `--symbol-parity`
+
 Remaining supplementary gaps:
 
 - Rust `NAME1` / `NAME2` constants exist only inside upstream inline tests and are not ported.
