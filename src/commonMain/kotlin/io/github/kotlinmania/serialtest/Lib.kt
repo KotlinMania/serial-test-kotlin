@@ -4,8 +4,25 @@ package io.github.kotlinmania.serialtest
 /**
  * # SerialTest
  *
- * SerialTest allows for the creation of serialized Kotlin tests using
- * serial helpers.
+ * SerialTest allows for the creation of serialized Kotlin tests using serial
+ * helpers.
+ *
+ * For example:
+ *
+ * ```kotlin
+ * testSerialOne()
+ * serial {
+ *     // Do things
+ * }
+ *
+ * serial("someKey") {
+ *     // Do things
+ * }
+ *
+ * parallel {
+ *     // Do parallel things
+ * }
+ * ```
  *
  * Multiple tests with the serial helper are guaranteed to execute serially.
  * Ordering of the tests is not guaranteed. Other tests using the parallel
@@ -19,6 +36,25 @@ package io.github.kotlinmania.serialtest
  * test using serial or parallel and another using file serial or file parallel,
  * because they lock using different methods.
  *
+ * ```kotlin
+ * fileSerial {
+ *     // Do things
+ * }
+ * ```
+ *
+ * The helpers can also be applied around all test functions in a surrounding
+ * block by calling the helper at that block boundary.
+ *
+ * ```kotlin
+ * serial {
+ *     fun helper() {
+ *         // Won't have serial applied unless called from inside the block.
+ *     }
+ *
+ *     testBar()
+ * }
+ * ```
+ *
  * All helpers support an optional crate argument for other generated code that
  * re-exports this package and supplies an import path.
  *
@@ -27,3 +63,30 @@ package io.github.kotlinmania.serialtest
  * Feature flags from the upstream crate are represented here as always
  * available Kotlin declarations.
  */
+
+// Tracking file for upstream `src/lib.rs`. Crate-root callable exports are ported as
+// their own Kotlin files rather than through a central re-export file:
+// `serial` -> Serial.kt, `parallel` -> Parallel.kt, `fileSerial` -> FileSerial.kt,
+// and `fileParallel` -> FileParallel.kt. Downstream Kotlin callers import those
+// defining functions directly.
+
+// Upstream crate-root exports implemented in their defining Kotlin files:
+// `localAsyncParallelCore`, `localAsyncParallelCoreWithReturn` -> ParallelCodeLock.kt.
+// `localParallelCore`, `localParallelCoreWithReturn` -> ParallelCodeLock.kt.
+// `localAsyncSerialCore`, `localAsyncSerialCoreWithReturn` -> SerialCodeLock.kt.
+// `localSerialCore`, `localSerialCoreWithReturn` -> SerialCodeLock.kt.
+// `fsAsyncSerialCore`, `fsAsyncSerialCoreWithReturn` -> SerialFileLock.kt.
+// `fsSerialCore`, `fsSerialCoreWithReturn` -> SerialFileLock.kt.
+// `isLockedFileSerially` -> FileLock.kt.
+// `fsAsyncParallelCore`, `fsAsyncParallelCoreWithReturn` -> ParallelFileLock.kt.
+// `fsParallelCore`, `fsParallelCoreWithReturn` -> ParallelFileLock.kt.
+// `parallel` -> Parallel.kt.
+// `serial` -> Serial.kt.
+// `fileParallel` -> FileParallel.kt.
+// `fileSerial` -> FileSerial.kt.
+// `isLockedSerially` -> CodeLock.kt.
+
+// Callers migrated:
+//   RUST_CALLERS.md currently lists cross-repo demand for the crate-root serial symbol.
+//   Kotlin downstream ports should import `io.github.kotlinmania.serialtest.serial`
+//   directly and wrap their test bodies with that function.
