@@ -73,6 +73,10 @@ internal class Locks private constructor(
         data.mutex.unlock()
         return count
     }
+
+    companion object {
+        fun new(name: String): Locks = Locks(name)
+    }
 }
 
 internal class MutexGuardWrapper(
@@ -86,6 +90,10 @@ internal class MutexGuardWrapper(
             released = true
             gate.unlock()
         }
+    }
+
+    fun drop() {
+        release()
     }
 }
 
