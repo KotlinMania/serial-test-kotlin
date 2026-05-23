@@ -199,7 +199,11 @@ kotlin {
         binaries.framework { baseName = "SerialTest"; xcf.add(this) }
     }
     iosSimulatorArm64 {
-        binaries.framework { baseName = "SerialTest"; xcf.add(this) }
+        binaries.framework {
+            baseName = "SerialTest"
+            isStatic = true
+            xcf.add(this)
+        }
     }
     iosX64 {
         binaries.framework { baseName = "SerialTest"; xcf.add(this) }
