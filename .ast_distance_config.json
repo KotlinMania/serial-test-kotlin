@@ -1,6 +1,5 @@
 {
   "type": "port",
-  "parity_mode": false,
   "name": "serial-test-kotlin",
   "source": {
     "path": "tmp/serial_test/src",
