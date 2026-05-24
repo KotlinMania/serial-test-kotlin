@@ -199,10 +199,22 @@ kotlin {
         binaries.framework { baseName = "SerialTest"; xcf.add(this) }
     }
     iosSimulatorArm64 {
-        binaries.framework { baseName = "SerialTest"; xcf.add(this) }
+        binaries.framework {
+            baseName = "SerialTest"
+            isStatic = true
+            xcf.add(this)
+        }
     }
     iosX64 {
-        binaries.framework { baseName = "SerialTest"; xcf.add(this) }
+        // iOS Simulator targets share an XCFramework "fat" stage that
+        // requires every input framework to be either all static or all
+        // dynamic. iosSimulatorArm64 is already declared static for the
+        // Swift Export SPM bridge, so iosX64 must match.
+        binaries.framework {
+            baseName = "SerialTest"
+            isStatic = true
+            xcf.add(this)
+        }
     }
 
     tvosArm64 {
@@ -273,6 +285,8 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
+                // Upstream src/file_lock.rs and src/rwlock.rs use `log::debug`.
+                implementation("io.github.kotlinmania:log-kotlin:0.1.1")
             }
         }
         val commonTest by getting {
