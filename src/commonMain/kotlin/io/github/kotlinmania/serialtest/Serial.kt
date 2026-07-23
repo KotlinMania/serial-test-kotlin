@@ -1,5 +1,5 @@
-// port-lint: ignore
 // Kotlin callable wrapper for the upstream crate-root serial attribute macro.
+// No upstream Rust counterpart (Kotlin-specific wrapper around localSerialCore).
 package io.github.kotlinmania.serialtest
 
 /**
