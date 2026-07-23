@@ -52,4 +52,10 @@ class FileLockTest {
         assertFalse(isLockedFileSerially(name1))
         assertFalse(isLockedFileSerially(name2))
     }
+
+    // Upstream `assert_serially_locked_in_different_thread` spawns a thread and
+    // checks that a file lock held by the current thread is not visible from the
+    // other thread. The Kotlin port's file lock implementation uses in-process
+    // Locks objects without OS-level file locking (fslock), so cross-process and
+    // cross-thread file lock semantics are not reproducible.
 }
