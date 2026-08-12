@@ -1,12 +1,12 @@
 // port-lint: source parallel_file_lock.rs
 package io.github.kotlinmania.serialtest
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.coroutines.startCoroutine
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class ParallelFileLockTest {
     private fun unlockOk(lockPath: String) {
@@ -47,9 +47,7 @@ class ParallelFileLockTest {
     fun unlockOnAssertAsyncWithoutReturn() {
         val lockPath = pathForName("unlock_on_assert_async_without_return")
 
-        suspend fun demoAssert() {
-            throw AssertionError("assertion failed")
-        }
+        suspend fun demoAssert(): Unit = throw AssertionError("assertion failed")
 
         suspend fun callSerialTestFn() {
             fsAsyncParallelCore(
@@ -70,9 +68,7 @@ class ParallelFileLockTest {
     fun unlockOnAssertAsyncWithReturn() {
         val lockPath = pathForName("unlock_on_assert_async_with_return")
 
-        suspend fun demoAssert(): Result<Unit> {
-            throw AssertionError("assertion failed")
-        }
+        suspend fun demoAssert(): Result<Unit> = throw AssertionError("assertion failed")
 
         suspend fun callSerialTestFn() {
             fsAsyncParallelCoreWithReturn(
