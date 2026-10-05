@@ -115,6 +115,7 @@ internal class SimpleSpinLock {
 
     fun lock() {
         while (!state.compareAndSet(expectedValue = 0, newValue = 1)) {
+            // Retry until the thread holding the lock releases it.
         }
     }
 
