@@ -30,8 +30,7 @@ class ParallelCodeLockTest {
                 listOf("unlock_on_assert_sync_with_return"),
                 null,
             ) {
-                fail("assertion failed")
-                Result.success(Unit)
+                throw AssertionError("assertion failed")
             }
         }
         assertEquals(
@@ -63,10 +62,7 @@ class ParallelCodeLockTest {
 
     @Test
     fun unlockOnAssertAsyncWithReturn() {
-        suspend fun demoAssert(): Result<Unit> {
-            fail("assertion failed")
-            return Result.success(Unit)
-        }
+        suspend fun demoAssert(): Result<Unit> = throw AssertionError("assertion failed")
 
         suspend fun callSerialTestFn() {
             localAsyncParallelCoreWithReturn(
