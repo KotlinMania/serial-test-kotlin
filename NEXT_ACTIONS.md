@@ -90,9 +90,9 @@ Every matched file is listed below with function and type symbol parity.
 ### 6. serial_code_lock
 
 - **Target:** `serialtest.SerialCodeLock`
-- **Similarity:** 0.49
+- **Similarity:** 0.48
 - **Dependents:** 0
-- **Priority Score:** 605.1
+- **Priority Score:** 605.2
 - **Functions:** 6/6 matched (target 7)
 - **Missing functions:** _none_
 - **Types:** 0/0 matched (target 1)
