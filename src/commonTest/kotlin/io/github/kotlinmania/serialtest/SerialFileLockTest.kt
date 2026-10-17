@@ -1,4 +1,4 @@
-// port-lint: source serial_file_lock.rs
+// port-lint: tests serial_file_lock.rs
 package io.github.kotlinmania.serialtest
 
 import kotlin.test.Test

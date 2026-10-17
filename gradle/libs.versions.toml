@@ -10,6 +10,9 @@ detekt = "2.0.0-alpha.6"
 ktlint = "14.2.0"
 kotlinxBenchmark = "0.5.0"
 logKotlin = "0.1.4"
+futuresKotlin = "0.2.1"
+itertoolsKotlin = "0.1.1"
+onceCellKotlin = "0.1.1"
 
 ktlintEngine = "1.8.0"
 
@@ -31,6 +34,9 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "collectionsImmutable" }
 kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-runtime", version.ref = "kotlinxBenchmark" }
 log-kotlin = { module = "io.github.kotlinmania:log-kotlin", version.ref = "logKotlin" }
+futures-kotlin = { module = "io.github.kotlinmania:futures-kotlin", version.ref = "futuresKotlin" }
+itertools-kotlin = { module = "io.github.kotlinmania:itertools-kotlin", version.ref = "itertoolsKotlin" }
+once-cell-kotlin = { module = "io.github.kotlinmania:once-cell-kotlin", version.ref = "onceCellKotlin" }
 
 [bundles]
 serial-test-commonMain = [
@@ -40,4 +46,9 @@ serial-test-commonMain = [
   "kotlinx-datetime",
   "collections-immutable",
   "log-kotlin",
+  "futures-kotlin",
+  "once-cell-kotlin",
+]
+serial-test-commonTest = [
+  "itertools-kotlin",
 ]

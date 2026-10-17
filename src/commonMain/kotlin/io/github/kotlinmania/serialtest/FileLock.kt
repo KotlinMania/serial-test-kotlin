@@ -8,6 +8,11 @@ internal class Lock private constructor(
 ) {
     private var serialGuard: MutexGuardWrapper? = null
 
+    private fun unlock() {
+        serialGuard?.release()
+        serialGuard = null
+    }
+
     fun startSerial() {
         while (parallelCount != 0) {
             parallelCount = locks.parallelCount()
@@ -17,26 +22,40 @@ internal class Lock private constructor(
     }
 
     fun endSerial() {
-        serialGuard?.release()
-        serialGuard = null
+        unlock()
+    }
+
+    private fun writeParallel() {
+        // In-process lock synchronization maintains parallelCount directly in lockState.
     }
 
     fun startParallel() {
         locks.startParallel()
         parallelCount = locks.parallelCount()
+        writeParallel()
+        unlock()
     }
 
     fun endParallel() {
+        check(parallelCount > 0)
         locks.endParallel()
         parallelCount = locks.parallelCount()
+        writeParallel()
+        unlock()
     }
 
     companion object {
+        fun genCountFile(path: String): String = "$path-count"
+
+        fun readParallelCount(path: String): Int = fileLocksForPath(path).parallelCount()
+
+        fun createLockfile(path: String): Locks = fileLocksForPath(path)
+
         fun new(path: String): Lock {
-            val locks = fileLocksForPath(path)
+            val locks = createLockfile(path)
             return Lock(
                 locks = locks,
-                parallelCount = locks.parallelCount(),
+                parallelCount = readParallelCount(path),
                 path = path,
             )
         }
@@ -52,9 +71,11 @@ private object FileLockStorage {
 
 private fun fileLocksForPath(path: String): Locks {
     FileLockStorage.mutex.lock()
-    val lock = FileLockStorage.locks.getOrPut(path) { Locks(path) }
-    FileLockStorage.mutex.unlock()
-    return lock
+    try {
+        return FileLockStorage.locks.getOrPut(path) { Locks.new(path) }
+    } finally {
+        FileLockStorage.mutex.unlock()
+    }
 }
 
 fun pathForName(name: String): String = "serial-test-$name"
@@ -74,7 +95,45 @@ internal fun getLocks(names: List<String>, path: String?): List<Lock> {
     return names.map { name -> makeLockForNameAndPath(name, path) }
 }
 
-internal fun isLockedFileSeriallyInternal(name: String? = null, path: String? = null): Boolean =
+/**
+ * Check if the current execution is holding a file serial lock.
+ *
+ * Can be used to assert that a piece of code can only be called
+ * from a test marked with the file serial helper.
+ *
+ * Example with file serial:
+ *
+ * ```kotlin
+ * fun doSomethingInNeedOfSerialization() {
+ *     check(isLockedFileSerially(null, null))
+ * }
+ *
+ * @Test
+ * fun testSerialization() = fileSerial {
+ *     doSomethingInNeedOfSerialization()
+ * }
+ * ```
+ *
+ * Example missing file serial:
+ *
+ * ```kotlin
+ * @Test
+ * fun testMissingSerialization() {
+ *     check(isLockedFileSerially(null, null))
+ * }
+ * ```
+ *
+ * Example with named key:
+ *
+ * ```kotlin
+ * @Test
+ * fun testNamedSerialization() = fileSerial("someKey") {
+ *     check(isLockedFileSerially("someKey", null))
+ *     check(!isLockedFileSerially(null, null))
+ * }
+ * ```
+ */
+fun isLockedFileSerially(name: String? = null, path: String? = null): Boolean =
     if (path != null) {
         Lock.isLocked(path)
     } else {

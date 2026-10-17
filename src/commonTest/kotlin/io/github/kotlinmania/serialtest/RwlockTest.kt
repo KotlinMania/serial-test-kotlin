@@ -1,4 +1,3 @@
-// port-lint: source rwlock.rs
 package io.github.kotlinmania.serialtest
 
 import kotlin.test.Test

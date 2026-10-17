@@ -1,4 +1,4 @@
-// port-lint: source parallel_code_lock.rs
+// port-lint: tests parallel_code_lock.rs
 package io.github.kotlinmania.serialtest
 
 import kotlin.coroutines.Continuation
@@ -10,6 +10,16 @@ import kotlin.test.assertFailsWith
 import kotlin.test.fail
 
 class ParallelCodeLockTest {
+    suspend fun demoAssert() {
+        fail("assertion failed")
+    }
+
+    suspend fun callSerialTestFn() {
+        localAsyncParallelCore(listOf("unlock_on_assert_async_without_return"), null) {
+            demoAssert()
+        }
+    }
+
     @Test
     fun unlockOnAssertSyncWithoutReturn() {
         assertFailsWith<AssertionError> {
@@ -41,16 +51,6 @@ class ParallelCodeLockTest {
 
     @Test
     fun unlockOnAssertAsyncWithoutReturn() {
-        suspend fun demoAssert() {
-            fail("assertion failed")
-        }
-
-        suspend fun callSerialTestFn() {
-            localAsyncParallelCore(listOf("unlock_on_assert_async_without_return"), null) {
-                demoAssert()
-            }
-        }
-
         assertFailsWith<AssertionError> {
             runSuspendForTest { callSerialTestFn() }
         }
@@ -62,19 +62,16 @@ class ParallelCodeLockTest {
 
     @Test
     fun unlockOnAssertAsyncWithReturn() {
-        suspend fun demoAssert(): Result<Unit> = throw AssertionError("assertion failed")
-
-        suspend fun callSerialTestFn() {
-            localAsyncParallelCoreWithReturn(
-                listOf("unlock_on_assert_async_with_return"),
-                null,
-            ) {
-                demoAssert()
-            }
-        }
-
         assertFailsWith<AssertionError> {
-            runSuspendForTest { callSerialTestFn() }
+            runSuspendForTest {
+                localAsyncParallelCoreWithReturn(
+                    listOf("unlock_on_assert_async_with_return"),
+                    null,
+                ) {
+                    demoAssert()
+                    Result.success(Unit)
+                }
+            }
         }
         assertEquals(
             0,

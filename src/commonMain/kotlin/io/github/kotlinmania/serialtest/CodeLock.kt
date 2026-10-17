@@ -1,6 +1,7 @@
 // port-lint: source code_lock.rs
 package io.github.kotlinmania.serialtest
 
+import io.github.kotlinmania.oncecell.sync.OnceCell
 import kotlin.concurrent.atomics.AtomicInt
 
 internal class UniqueReentrantMutex(
@@ -28,30 +29,74 @@ internal class UniqueReentrantMutex(
 
         fun newMutex(name: String): UniqueReentrantMutex =
             UniqueReentrantMutex(
-                locks = Locks(name),
+                locks = Locks.new(name),
                 id = mutexId.fetchAndAdd(1),
             )
     }
 }
 
-private object GlobalLocks {
-    val mutex = SimpleSpinLock()
-    val locks = mutableMapOf<String, UniqueReentrantMutex>()
-}
+private val locksCell = OnceCell<MutableMap<String, UniqueReentrantMutex>>()
+private val globalLocksMutex = SimpleSpinLock()
 
-internal fun globalLocks(): MutableMap<String, UniqueReentrantMutex> = GlobalLocks.locks
+internal fun globalLocks(): MutableMap<String, UniqueReentrantMutex> =
+    locksCell.getOrInit { mutableMapOf() }
 
-internal fun isLockedSeriallyInternal(name: String? = null): Boolean {
-    GlobalLocks.mutex.lock()
-    val lock = globalLocks()[name.orEmpty()]
-    GlobalLocks.mutex.unlock()
-    return lock?.isLockedByCurrentThread() ?: false
+/**
+ * Check if the current execution is holding a serial lock.
+ *
+ * Can be used to assert that a piece of code can only be called
+ * from a test marked with the serial helper.
+ *
+ * Example with serial:
+ *
+ * ```kotlin
+ * fun doSomethingInNeedOfSerialization() {
+ *     check(isLockedSerially(null))
+ * }
+ *
+ * @Test
+ * fun testSerialization() = serial {
+ *     doSomethingInNeedOfSerialization()
+ * }
+ * ```
+ *
+ * Example missing serial:
+ *
+ * ```kotlin
+ * @Test
+ * fun testMissingSerialization() {
+ *     check(isLockedSerially(null))
+ * }
+ * ```
+ *
+ * Example with named key:
+ *
+ * ```kotlin
+ * @Test
+ * fun testNamedSerialization() = serial("someKey") {
+ *     check(isLockedSerially("someKey"))
+ *     check(!isLockedSerially(null))
+ * }
+ * ```
+ */
+fun isLockedSerially(name: String? = null): Boolean {
+    globalLocksMutex.lock()
+    try {
+        val lock = globalLocks()[name.orEmpty()]
+        return lock?.isLockedByCurrentThread() ?: false
+    } finally {
+        globalLocksMutex.unlock()
+    }
 }
 
 internal fun checkNewKey(name: String) {
-    GlobalLocks.mutex.lock()
-    if (!globalLocks().containsKey(name)) {
-        globalLocks()[name] = UniqueReentrantMutex.newMutex(name)
+    globalLocksMutex.lock()
+    try {
+        val map = globalLocks()
+        if (!map.containsKey(name)) {
+            map[name] = UniqueReentrantMutex.newMutex(name)
+        }
+    } finally {
+        globalLocksMutex.unlock()
     }
-    GlobalLocks.mutex.unlock()
 }
