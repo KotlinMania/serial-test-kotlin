@@ -1,10 +1,58 @@
 // port-lint: source parallel_file_lock.rs
 package io.github.kotlinmania.serialtest
 
-// Ledger for upstream `src/parallel_file_lock.rs`.
-// Upstream functions implemented in their own Kotlin files:
-// `fsParallelCore` -> FsParallelCore.kt.
-// `fsParallelCoreWithReturn` -> FsParallelCoreWithReturn.kt.
-// `fsAsyncParallelCore` -> FsAsyncParallelCore.kt.
-// `fsAsyncParallelCoreWithReturn` -> FsAsyncParallelCoreWithReturn.kt.
-// Upstream tests ported in ParallelFileLockTest.kt.
+fun fsParallelCore(
+    names: List<String>,
+    path: String? = null,
+    function: () -> Unit,
+) {
+    val locks = getLocks(names, path)
+    locks.forEach { it.startParallel() }
+    try {
+        function()
+    } finally {
+        locks.forEach { it.endParallel() }
+    }
+}
+
+fun fsParallelCoreWithReturn(
+    names: List<String>,
+    path: String? = null,
+    function: () -> Result<Unit>,
+): Result<Unit> {
+    val locks = getLocks(names, path)
+    locks.forEach { it.startParallel() }
+    return try {
+        function()
+    } finally {
+        locks.forEach { it.endParallel() }
+    }
+}
+
+suspend fun fsAsyncParallelCoreWithReturn(
+    names: List<String>,
+    path: String? = null,
+    function: suspend () -> Result<Unit>,
+): Result<Unit> {
+    val locks = getLocks(names, path)
+    locks.forEach { it.startParallel() }
+    return try {
+        function()
+    } finally {
+        locks.forEach { it.endParallel() }
+    }
+}
+
+suspend fun fsAsyncParallelCore(
+    names: List<String>,
+    path: String? = null,
+    function: suspend () -> Unit,
+) {
+    val locks = getLocks(names, path)
+    locks.forEach { it.startParallel() }
+    try {
+        function()
+    } finally {
+        locks.forEach { it.endParallel() }
+    }
+}

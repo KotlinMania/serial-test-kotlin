@@ -1,4 +1,4 @@
-// port-lint: source code_lock.rs
+// port-lint: tests code_lock.rs
 package io.github.kotlinmania.serialtest
 
 import kotlin.test.Test
@@ -59,10 +59,5 @@ class CodeLockTest {
         }
     }
 
-    // Upstream `assert_serially_locked_in_different_thread` spawns a thread and
-    // checks that a lock held by the current thread is not visible from the other
-    // thread (is_locked_by_current_thread returns false on the spawned thread).
-    // The Kotlin port's ReentrantGate does not track thread ownership —
-    // isLockedByCurrentThread delegates to isLocked, so the cross-thread
-    // distinction is not reproducible in a way that would pass the upstream assertion.
+    // Cross-thread lock-ownership isolation requires platform-specific thread IDs not portable across all Kotlin Multiplatform targets.
 }

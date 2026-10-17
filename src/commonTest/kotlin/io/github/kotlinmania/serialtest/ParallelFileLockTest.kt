@@ -1,4 +1,4 @@
-// port-lint: source parallel_file_lock.rs
+// port-lint: tests parallel_file_lock.rs
 package io.github.kotlinmania.serialtest
 
 import kotlin.coroutines.Continuation
@@ -9,10 +9,21 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class ParallelFileLockTest {
-    private fun unlockOk(lockPath: String) {
+    fun unlockOk(lockPath: String) {
         val lock = Lock.new(lockPath)
         assertEquals(0, lock.parallelCount)
         lock.endSerial()
+    }
+
+    suspend fun demoAssert(): Unit = throw AssertionError("assertion failed")
+
+    suspend fun callSerialTestFn(lockPath: String) {
+        fsAsyncParallelCore(
+            listOf("unlock_on_assert_async_without_return"),
+            lockPath,
+        ) {
+            demoAssert()
+        }
     }
 
     @Test
@@ -47,19 +58,8 @@ class ParallelFileLockTest {
     fun unlockOnAssertAsyncWithoutReturn() {
         val lockPath = pathForName("unlock_on_assert_async_without_return")
 
-        suspend fun demoAssert(): Unit = throw AssertionError("assertion failed")
-
-        suspend fun callSerialTestFn() {
-            fsAsyncParallelCore(
-                listOf("unlock_on_assert_async_without_return"),
-                lockPath,
-            ) {
-                demoAssert()
-            }
-        }
-
         assertFailsWith<AssertionError> {
-            runSuspendForFileTest { callSerialTestFn() }
+            runSuspendForFileTest { callSerialTestFn(lockPath) }
         }
         unlockOk(lockPath)
     }
@@ -68,19 +68,16 @@ class ParallelFileLockTest {
     fun unlockOnAssertAsyncWithReturn() {
         val lockPath = pathForName("unlock_on_assert_async_with_return")
 
-        suspend fun demoAssert(): Result<Unit> = throw AssertionError("assertion failed")
-
-        suspend fun callSerialTestFn() {
-            fsAsyncParallelCoreWithReturn(
-                listOf("unlock_on_assert_async_with_return"),
-                lockPath,
-            ) {
-                demoAssert()
-            }
-        }
-
         assertFailsWith<AssertionError> {
-            runSuspendForFileTest { callSerialTestFn() }
+            runSuspendForFileTest {
+                fsAsyncParallelCoreWithReturn(
+                    listOf("unlock_on_assert_async_with_return"),
+                    lockPath,
+                ) {
+                    demoAssert()
+                    Result.success(Unit)
+                }
+            }
         }
         unlockOk(lockPath)
     }
