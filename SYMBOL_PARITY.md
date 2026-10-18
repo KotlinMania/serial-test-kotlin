@@ -127,14 +127,14 @@ missing-function set, but not the exact same list as `--symbol-parity`.
 Commands run:
 
 ```bash
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/rwlock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/Rwlock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/CodeLock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/parallel_code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/ParallelCodeLock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/serial_code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/SerialCodeLock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/FileLock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/parallel_file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/ParallelFileLock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/serial_file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/SerialFileLock.kt kotlin
-/Volumes/stuff/Projects/kotlinmania/bin/ast_distance --compare-functions tmp/serial_test/src/lib.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/Lib.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/rwlock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/Rwlock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/CodeLock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/parallel_code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/ParallelCodeLock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/serial_code_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/SerialCodeLock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/FileLock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/parallel_file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/ParallelFileLock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/serial_file_lock.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/SerialFileLock.kt kotlin
+../bin/ast_distance --compare-functions tmp/serial_test/src/lib.rs rust src/commonMain/kotlin/io/github/kotlinmania/serialtest/Lib.kt kotlin
 ```
 
 Strict function comparison reported 39 unmatched Rust functions across those
