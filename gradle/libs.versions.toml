@@ -16,6 +16,8 @@ onceCellKotlin = "0.1.1"
 
 ktlintEngine = "1.8.0"
 
+androidxTestRunner = "1.7.0"
+
 [plugins]
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidKmp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -38,6 +40,8 @@ log-kotlin = { module = "io.github.kotlinmania:log-kotlin", version.ref = "logKo
 futures-kotlin = { module = "io.github.kotlinmania:futures-kotlin", version.ref = "futuresKotlin" }
 itertools-kotlin = { module = "io.github.kotlinmania:itertools-kotlin", version.ref = "itertoolsKotlin" }
 once-cell-kotlin = { module = "io.github.kotlinmania:once-cell-kotlin", version.ref = "onceCellKotlin" }
+
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 
 [bundles]
 serial-test-commonMain = [
