@@ -1,6 +1,6 @@
 # port-lint Proposed Changes
 
-**Generated:** 2026-10-16
+**Generated:** 2026-10-26
 **Source:** tmp/serial_test/src
 **Target:** src/commonMain/kotlin/io/github/kotlinmania/serialtest
 
