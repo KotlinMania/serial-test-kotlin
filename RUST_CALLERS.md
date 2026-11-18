@@ -16,15 +16,15 @@ For every Rust crate this repo owns (under `tmp/`), this file lists every **cros
 
 | package | module | inbound use sites | distinct caller crates | distinct caller repos | codex sites |
 |---|---|---:|---:|---:|---:|
-| `serial_test` | `serial_test` | 17 | 8 | 4 | 12 |
+| `serial_test` | `serial_test` | 26 | 10 | 6 | 12 |
 
 ## `serial_test`
 
-### Inbound symbols (1 distinct, 17 total `use` sites)
+### Inbound symbols (2 distinct, 26 total `use` sites)
 
 Sorted by codex demand, then total demand. The first symbols are the priority queue for porting `serial_test`.
 
-#### `serial_test::serial` — 17 site(s) (12 codex, 5 other, 8 caller crates)
+#### `serial_test::serial` — 25 site(s) (12 codex, 13 other, 10 caller crates)
 
 - ✅ `codex-kotlin/codex-app-server` `src/message_processor_tracing_tests.rs:50` — `use serial_test::serial`
 - ✅ `codex-kotlin/codex-app-server` `tests/suite/v2/account.rs:42` — `use serial_test::serial`
@@ -38,4 +38,8 @@ Sorted by codex demand, then total demand. The first symbols are the priority qu
 - ✅ `codex-kotlin/codex-tui` `src/chatwidget/tests.rs:179` — `pub_use serial_test::serial`
 - ✅ `codex-kotlin/codex-tui` `src/external_editor.rs:97` — `use serial_test::serial`
 - ✅ `codex-kotlin/codex-tui` `src/lib.rs:1711` — `use serial_test::serial`
-- _… and 5 more site(s)._
+- _… and 13 more site(s)._
+
+#### `serial_test` — 1 site(s) (0 codex, 1 other, 1 caller crates)
+
+- `vergen-kotlin/vergen` `src/lib.rs:527` — `use serial_test as _`
